@@ -15,7 +15,7 @@ export const postSlice = createSlice({
 
     builder.addCase(getPosts.fulfilled, (state, action) => {
       state.status = "idle";
-      state.postList = action.payload.articles;
+      state.postList = action.payload;
     });
 
     builder.addCase(getPosts.rejected, (state) => {
@@ -27,15 +27,14 @@ export const postSlice = createSlice({
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
   async (_, { rejectWithValue }) => {
-    const response = await axios.get(
-      `${getEnv(
-        "VITE_SERVER_API"
-      )}/top-headlines?sources=techcrunch&apiKey=${getEnv("VITE_API_KEY")}`
-    );
+    const response = await axios.get(`${getEnv("VITE_SERVER_API")}/posts`);
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");
     }
-    const data = await response.data;
+    const data = await response.data.posts;
     return data;
   }
 );
+
+export const selectAllPosts = (state) => state.posts.postList;
+export const selectStatus = (state) => state.posts.status;

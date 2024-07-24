@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-
+import { Box, Button } from "@mui/material";
+import LinkBehavior from "../../components/LinkBehavior";
 export default function Post() {
   return (
     <div>
@@ -30,6 +30,9 @@ export default function Post() {
           deserunt odit tenetur eos minima, saepe aperiam tempora quo sed iure?
         </p>
       </Box>
+      <Button variant="outlined" component={LinkBehavior} to={"/"}>
+        Quay lại
+      </Button>
     </div>
   );
 }
