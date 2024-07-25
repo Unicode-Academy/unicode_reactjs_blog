@@ -2,7 +2,7 @@ import { FormControl, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { createStyles, makeStyles } from "@mui/styles";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPosts } from "../redux/slice/postSlice";
 import { debounce } from "../utils/debounce";
@@ -20,16 +20,13 @@ export default function SearchForm() {
   const [showClearIcon, setShowClearIcon] = useState("none");
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
+  const firstRequestRef = useRef(true);
   const handleChange = (event) => {
     const value = event.target.value;
-    setShowClearIcon(value === "" ? "none" : "flex");
     setKeyword(value);
-    requestSearch(value);
   };
   const handleClearInput = () => {
     setKeyword("");
-    requestSearch("");
-    setShowClearIcon("none");
   };
   const requestSearch = useCallback(
     debounce((keyword) => {
@@ -37,6 +34,18 @@ export default function SearchForm() {
     }),
     []
   );
+  useEffect(() => {
+    if (!firstRequestRef.current) {
+      requestSearch(keyword);
+    }
+    setShowClearIcon(keyword === "" ? "none" : "flex");
+    //Ý tưởng: Kiểm tra keyword cũ
+    return () => {
+      if (keyword) {
+        firstRequestRef.current = false;
+      }
+    };
+  }, [keyword]);
   return (
     <FormControl className={search} sx={{ paddingBottom: 2 }} fullWidth={true}>
       <TextField
