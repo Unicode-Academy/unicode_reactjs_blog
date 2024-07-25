@@ -59,8 +59,16 @@ export const getPost = createAsyncThunk(
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");
     }
-    const data = await response.data;
-    return data;
+    const post = await response.data;
+    const responseUser = await axios.get(
+      `${getEnv("VITE_SERVER_API")}/users/${post.userId}`
+    );
+    if (responseUser.status === 200) {
+      const user = await responseUser.data;
+      post.user = user;
+    }
+
+    return post;
   }
 );
 

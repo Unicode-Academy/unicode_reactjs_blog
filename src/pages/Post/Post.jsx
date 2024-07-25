@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Link } from "@mui/material";
 import LinkBehavior from "../../components/LinkBehavior";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -27,8 +27,13 @@ export default function Post() {
         <>
           <h1>{post.title}</h1>
           <Box sx={{ paddingBlock: 1, display: "flex" }} gap={1}>
-            <span>Posted by: Hoàng An</span>
-            <span>At: 01/01/2022</span>
+            <span>
+              Posted by:{" "}
+              <Link color="inherit" href={`/author/${post.userId}`}>
+                {post?.user?.username}
+              </Link>
+            </span>
+            <span>Views: {post.views}</span>
           </Box>
           <Box>
             <p>{post.body}</p>
