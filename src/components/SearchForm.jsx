@@ -2,7 +2,9 @@ import { FormControl, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { createStyles, makeStyles } from "@mui/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getPosts } from "../redux/slice/postSlice";
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -16,6 +18,7 @@ export default function SearchForm() {
   const { search } = useStyles();
   const [showClearIcon, setShowClearIcon] = useState("none");
   const [keyword, setKeyword] = useState("");
+  const dispatch = useDispatch();
   const handleChange = (event) => {
     setShowClearIcon(event.target.value === "" ? "none" : "flex");
     setKeyword(event.target.value);
@@ -23,6 +26,9 @@ export default function SearchForm() {
   const handleClick = () => {
     setKeyword("");
   };
+  useEffect(() => {
+    dispatch(getPosts(keyword));
+  }, [keyword, dispatch]);
   return (
     <FormControl className={search} sx={{ paddingBottom: 2 }} fullWidth={true}>
       <TextField

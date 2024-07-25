@@ -40,8 +40,14 @@ export const postSlice = createSlice({
 
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
-  async (_, { rejectWithValue }) => {
-    const response = await axios.get(`${getEnv("VITE_SERVER_API")}/posts`);
+  async (query = "", { rejectWithValue }) => {
+    let queryString = "";
+    if (query) {
+      queryString = `/search?q=${query}`;
+    }
+    const response = await axios.get(
+      `${getEnv("VITE_SERVER_API")}/posts${queryString}`
+    );
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");
     }
