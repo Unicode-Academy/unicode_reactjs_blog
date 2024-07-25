@@ -7,6 +7,7 @@ import {
   selectStatus,
 } from "../../redux/slice/postSlice";
 import CardItem from "../../components/CartItem";
+import SearchForm from "../../components/SearchForm";
 export default function Home() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function Home() {
   return (
     <>
       <h1>Blog</h1>
+      <SearchForm />
       <Grid container spacing={2}>
         {status === "pending" ? (
           <h2>Loading...</h2>
