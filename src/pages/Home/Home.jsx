@@ -15,7 +15,7 @@ export default function Home() {
   const posts = useSelector(selectAllPosts);
   const status = useSelector(selectStatus);
   if (status === "error") {
-    return <h2>Error</h2>;
+    return <h2>Đã có lỗi xảy ra. Vui lòng thử lại sau</h2>;
   }
   return (
     <>
