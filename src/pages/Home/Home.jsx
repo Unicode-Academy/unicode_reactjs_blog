@@ -12,15 +12,22 @@ import SearchForm from "../../components/SearchForm";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
 import { getEnv } from "../../utils/env";
+import { useSearchParams } from "react-router-dom";
 export default function Home() {
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page") ?? 1);
+  const keyword = searchParams.get("keyword") ?? "";
+
   const handleChangePage = (_, page) => {
     const skip = (page - 1) * getEnv("VITE_LIMIT");
-    dispatch(getPosts({ query: "", skip }));
+    dispatch(getPosts({ query: keyword, skip }));
+    setSearchParams({ page });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   useEffect(() => {
-    dispatch(getPosts({ query: "", skip: 0 }));
+    const skip = (page - 1) * getEnv("VITE_LIMIT");
+    dispatch(getPosts({ query: keyword, skip }));
   }, [dispatch]);
   const posts = useSelector(selectAllPosts);
   const status = useSelector(selectStatus);
@@ -47,14 +54,15 @@ export default function Home() {
             />
           </Grid>
         ))}
-        <Pagination
-          sx={{ marginTop: 2 }}
-          count={pageCount}
-          siblingCount={3}
-          color="primary"
-          onChange={handleChangePage}
-        />
       </Grid>
+      <Pagination
+        sx={{ marginTop: 2 }}
+        count={pageCount}
+        siblingCount={3}
+        color="primary"
+        page={page}
+        onChange={handleChangePage}
+      />
     </>
   );
 }

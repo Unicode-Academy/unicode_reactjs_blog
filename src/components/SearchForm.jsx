@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPosts } from "../redux/slice/postSlice";
 import { debounce } from "../utils/debounce";
+import { useSearchParams } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -20,23 +21,28 @@ export default function SearchForm() {
   const [showClearIcon, setShowClearIcon] = useState("none");
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const firstRequestRef = useRef(true);
   const handleChange = (event) => {
     const value = event.target.value;
     setKeyword(value);
+    setSearchParams({ keyword: value });
   };
   const handleClearInput = () => {
     setKeyword("");
   };
   const requestSearch = useCallback(
     debounce((keyword) => {
-      dispatch(getPosts(keyword));
+      dispatch(getPosts({ query: keyword }));
     }),
     []
   );
   useEffect(() => {
     if (!firstRequestRef.current) {
       requestSearch(keyword);
+    }
+    if (searchParams.get("keyword")) {
+      setKeyword(searchParams.get("keyword"));
     }
     setShowClearIcon(keyword === "" ? "none" : "flex");
     //Ý tưởng: Kiểm tra keyword cũ
@@ -54,7 +60,7 @@ export default function SearchForm() {
         onChange={handleChange}
         fullWidth={true}
         placeholder="Từ khóa tìm kiếm..."
-        value={keyword}
+        value={searchParams.get("keyword") ?? keyword}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
