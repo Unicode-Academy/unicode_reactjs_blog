@@ -5,6 +5,7 @@ export const postSlice = createSlice({
   name: "posts",
   initialState: {
     postList: [],
+    postCount: 0,
     post: {},
     status: "idle",
   },
@@ -16,7 +17,8 @@ export const postSlice = createSlice({
 
     builder.addCase(getPosts.fulfilled, (state, action) => {
       state.status = "idle";
-      state.postList = action.payload;
+      state.postList = action.payload.posts;
+      state.postCount = action.payload.total;
     });
 
     builder.addCase(getPosts.rejected, (state) => {
@@ -40,8 +42,8 @@ export const postSlice = createSlice({
 
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
-  async (query = "", { rejectWithValue }) => {
-    let queryString = "";
+  async ({ query = "", skip = 0 }, { rejectWithValue }) => {
+    let queryString = `?limit=${getEnv("VITE_LIMIT")}&skip=${skip}`;
     if (query) {
       queryString = `/search?q=${query}`;
     }
@@ -51,7 +53,7 @@ export const getPosts = createAsyncThunk(
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");
     }
-    const data = await response.data.posts;
+    const data = await response.data;
     return data;
   }
 );
@@ -79,5 +81,6 @@ export const getPost = createAsyncThunk(
 );
 
 export const selectAllPosts = (state) => state.posts.postList;
+export const selectPostCount = (state) => state.posts.postCount;
 export const selectOnePost = (state) => state.posts.post;
 export const selectStatus = (state) => state.posts.status;
