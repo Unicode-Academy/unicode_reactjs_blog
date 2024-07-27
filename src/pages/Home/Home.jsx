@@ -21,8 +21,22 @@ export default function Home() {
 
   const handleChangePage = (_, page) => {
     const skip = (page - 1) * getEnv("VITE_LIMIT");
+    const params = Array.from(searchParams.entries()).reduce(
+      (prev, [key, value]) => {
+        if (!prev[key]) {
+          prev[key] = value;
+        } else {
+          if (!Array.isArray(prev[key])) {
+            prev[key] = [prev[key]];
+          }
+          prev[key].push(value);
+        }
+        return prev;
+      },
+      {}
+    );
     dispatch(getPosts({ query: keyword, skip }));
-    setSearchParams({ page });
+    setSearchParams({ ...params, page });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   useEffect(() => {

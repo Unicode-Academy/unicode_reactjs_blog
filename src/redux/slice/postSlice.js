@@ -43,12 +43,18 @@ export const postSlice = createSlice({
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
   async ({ query = "", skip = 0 }, { rejectWithValue }) => {
-    let queryString = `?limit=${getEnv("VITE_LIMIT")}&skip=${skip}`;
+    const params = {
+      q: query,
+      limit: getEnv("VITE_LIMIT"),
+      skip,
+    };
+    let pathname = "/posts";
     if (query) {
-      queryString = `/search?q=${query}`;
+      pathname = "/posts/search";
     }
+    let queryString = `?${new URLSearchParams(params).toString()}`;
     const response = await axios.get(
-      `${getEnv("VITE_SERVER_API")}/posts${queryString}`
+      `${getEnv("VITE_SERVER_API")}${pathname}${queryString}`
     );
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");
