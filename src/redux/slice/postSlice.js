@@ -37,6 +37,21 @@ export const postSlice = createSlice({
     builder.addCase(getPost.rejected, (state) => {
       state.status = "error";
     });
+
+    // get posts by user
+    builder.addCase(getPostsByUser.pending, (state) => {
+      state.status = "pending";
+    });
+
+    builder.addCase(getPostsByUser.fulfilled, (state, action) => {
+      state.status = "idle";
+      state.postList = action.payload.posts;
+      state.postCount = action.payload.total;
+    });
+
+    builder.addCase(getPostsByUser.rejected, (state) => {
+      state.status = "error";
+    });
   },
 });
 
@@ -83,6 +98,20 @@ export const getPost = createAsyncThunk(
     }
 
     return post;
+  }
+);
+
+export const getPostsByUser = createAsyncThunk(
+  "posts/getPostsByUser",
+  async (id, { rejectWithValue }) => {
+    const response = await axios.get(
+      `${getEnv("VITE_SERVER_API")}/users/${id}/posts`
+    );
+    if (response.status !== 200) {
+      return rejectWithValue("Fetching data error");
+    }
+    const data = await response.data;
+    return data;
   }
 );
 

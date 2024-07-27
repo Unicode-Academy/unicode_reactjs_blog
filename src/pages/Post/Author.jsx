@@ -21,7 +21,7 @@ export default function Author() {
   return (
     <>
       <h1>Tác giả: {user.username}</h1>
-      <PostList />
+      <PostList filter="user" value={id} />
     </>
   );
 }

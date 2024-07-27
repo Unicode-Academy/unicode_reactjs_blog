@@ -30,7 +30,11 @@ export default function Post() {
       <Box sx={{ paddingBlock: 1, display: "flex" }} gap={1}>
         <span>
           Posted by:{" "}
-          <Link color="inherit" href={`/author/${post.userId}`}>
+          <Link
+            component={LinkBehavior}
+            color="inherit"
+            to={`/author/${post.userId}`}
+          >
             {post?.user?.username}
           </Link>
         </span>

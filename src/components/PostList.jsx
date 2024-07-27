@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import {
   getPosts,
+  getPostsByUser,
   selectAllPosts,
   selectPostCount,
   selectStatus,
@@ -13,7 +14,7 @@ import Loading from "../components/Loading";
 import Error from "../components/Error";
 import { getEnv } from "../utils/env";
 
-export default function PostList() {
+export default function PostList({ filter, value }) {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get("page") ?? 1);
@@ -35,13 +36,21 @@ export default function PostList() {
       },
       {}
     );
-    dispatch(getPosts({ query: keyword, skip }));
+    if (filter === "user") {
+      dispatch(getPostsByUser(value, { skip }));
+    } else {
+      dispatch(getPosts({ query: keyword, skip }));
+    }
     setSearchParams({ ...params, page });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   useEffect(() => {
     const skip = (page - 1) * getEnv("VITE_LIMIT");
-    dispatch(getPosts({ query: keyword, skip }));
+    if (filter === "user") {
+      dispatch(getPostsByUser(value, { skip }));
+    } else {
+      dispatch(getPosts({ query: keyword, skip }));
+    }
   }, [dispatch]);
   const posts = useSelector(selectAllPosts);
   const status = useSelector(selectStatus);
