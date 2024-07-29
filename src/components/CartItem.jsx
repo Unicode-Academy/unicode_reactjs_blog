@@ -13,7 +13,9 @@ import { Link } from "@mui/material";
 export default function CartItem({ id, title, image }) {
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardMedia sx={{ height: 140 }} image={image} title={title} />
+      <Link to={`/post/${id}`} component={LinkBehavior}>
+        <CardMedia sx={{ height: 140 }} image={image} title={title} />
+      </Link>
       <CardContent style={{ paddingBottom: 0 }}>
         <Typography
           gutterBottom
