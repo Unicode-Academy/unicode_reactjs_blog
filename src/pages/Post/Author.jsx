@@ -13,7 +13,7 @@ export default function Author() {
   const { id } = useParams();
   useEffect(() => {
     dispatch(getUser(id));
-  }, []);
+  }, [dispatch, id]);
 
   if (status === "error") {
     return <Error />;

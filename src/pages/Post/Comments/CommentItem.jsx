@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { Divider, Avatar, Grid } from "@mui/material";
+import PropTypes from "prop-types";
 export default function CommentItem({ comment }) {
   const imgLink =
     "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
@@ -21,3 +21,6 @@ export default function CommentItem({ comment }) {
     </>
   );
 }
+CommentItem.propTypes = {
+  comment: PropTypes.object.isRequired,
+};

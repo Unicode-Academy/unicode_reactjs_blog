@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Grid, Pagination } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -56,7 +57,7 @@ export default function PostList({ filter, value }) {
     } else {
       dispatch(getPosts({ query: keyword, skip }));
     }
-  }, [dispatch]);
+  }, [dispatch, filter, keyword, page, value]);
   const posts = useSelector(selectAllPosts);
   const status = useSelector(selectStatus);
   const postCount = useSelector(selectPostCount);
@@ -98,3 +99,8 @@ export default function PostList({ filter, value }) {
     </>
   );
 }
+
+PostList.propTypes = {
+  filter: PropTypes.string,
+  value: PropTypes.string,
+};

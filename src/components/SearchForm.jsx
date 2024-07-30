@@ -52,7 +52,7 @@ export default function SearchForm() {
         firstRequestRef.current = false;
       }
     };
-  }, [keyword]);
+  }, [keyword, requestSearch, searchParams]);
   return (
     <FormControl className={search} sx={{ paddingBottom: 2 }} fullWidth={true}>
       <TextField

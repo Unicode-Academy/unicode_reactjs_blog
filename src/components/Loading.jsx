@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 export default function Loading({ type = "backdrop" }) {
@@ -12,3 +13,7 @@ export default function Loading({ type = "backdrop" }) {
     <CircularProgress />
   );
 }
+
+Loading.propTypes = {
+  type: PropTypes.string,
+};

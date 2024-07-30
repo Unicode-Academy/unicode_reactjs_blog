@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import {
   Button,
   Card,
@@ -47,3 +47,8 @@ export default function CartItem({ id, title, image }) {
     </Card>
   );
 }
+CartItem.propTypes = {
+  id: PropTypes.number,
+  title: PropTypes.string,
+  image: PropTypes.string,
+};

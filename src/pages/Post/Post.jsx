@@ -9,7 +9,7 @@ import {
   selectOnePost,
   selectStatus,
 } from "../../redux/slice/postSlice";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
 import CommentList from "./Comments/CommentList";
@@ -21,17 +21,17 @@ export default function Post() {
   const { id } = useParams();
   const post = useSelector(selectOnePost);
   const status = useSelector(selectStatus);
-  const getCommentList = async () => {
+  const getCommentList = useCallback(async () => {
     const response = await axios.get(
       getEnv("VITE_SERVER_API") + `/comments/post/${id}`
     );
     const data = await response.data;
     setCommentList(data.comments);
-  };
+  }, [id]);
   useEffect(() => {
     dispatch(getPost(id));
     getCommentList();
-  }, [dispatch, id]);
+  }, [dispatch, id, getCommentList]);
   if (status === "error") {
     return <Error />;
   }
