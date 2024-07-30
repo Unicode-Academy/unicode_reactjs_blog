@@ -2,6 +2,8 @@ import { Box, Button, Link } from "@mui/material";
 import LinkBehavior from "../../components/LinkBehavior";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import {
   getPost,
   selectOnePost,
@@ -42,6 +44,38 @@ export default function Post() {
       </Box>
       <Box>
         <p>{post.body}</p>
+        {post.tags?.length && (
+          <Box sx={{ marginBottom: 2 }}>
+            Tags:
+            {post.tags.map((tag, index) => (
+              <Button
+                sx={{ marginInline: 1 }}
+                key={index}
+                variant="outlined"
+                size="small"
+                component={LinkBehavior}
+                to={`/tag/${tag}`}
+              >
+                {tag}
+              </Button>
+            ))}
+          </Box>
+        )}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            alignItems: "center",
+            marginBottom: 2,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+            <ThumbUpIcon color="primary" /> {post.reactions?.likes}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+            <ThumbDownAltIcon color="error" /> {post.reactions?.dislikes}
+          </div>
+        </Box>
       </Box>
       <Button variant="outlined" component={LinkBehavior} to={"/"}>
         Quay lại

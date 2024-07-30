@@ -52,6 +52,21 @@ export const postSlice = createSlice({
     builder.addCase(getPostsByUser.rejected, (state) => {
       state.status = "error";
     });
+
+    //get posts by tag
+    builder.addCase(getPostsByTag.pending, (state) => {
+      state.status = "pending";
+    });
+
+    builder.addCase(getPostsByTag.fulfilled, (state, action) => {
+      state.status = "idle";
+      state.postList = action.payload.posts;
+      state.postCount = action.payload.total;
+    });
+
+    builder.addCase(getPostsByTag.rejected, (state) => {
+      state.status = "error";
+    });
   },
 });
 
@@ -103,9 +118,33 @@ export const getPost = createAsyncThunk(
 
 export const getPostsByUser = createAsyncThunk(
   "posts/getPostsByUser",
-  async (id, { rejectWithValue }) => {
+  async ({ value, skip }, { rejectWithValue }) => {
+    const params = {
+      limit: getEnv("VITE_LIMIT"),
+      skip,
+    };
+    let queryString = `?${new URLSearchParams(params).toString()}`;
     const response = await axios.get(
-      `${getEnv("VITE_SERVER_API")}/users/${id}/posts`
+      `${getEnv("VITE_SERVER_API")}/users/${value}/posts${queryString}`
+    );
+    if (response.status !== 200) {
+      return rejectWithValue("Fetching data error");
+    }
+    const data = await response.data;
+    return data;
+  }
+);
+
+export const getPostsByTag = createAsyncThunk(
+  "posts/getPostsByTag",
+  async ({ value, skip }, { rejectWithValue }) => {
+    const params = {
+      limit: getEnv("VITE_LIMIT"),
+      skip,
+    };
+    let queryString = `?${new URLSearchParams(params).toString()}`;
+    const response = await axios.get(
+      `${getEnv("VITE_SERVER_API")}/posts/tag/${value}${queryString}`
     );
     if (response.status !== 200) {
       return rejectWithValue("Fetching data error");

@@ -1,9 +1,10 @@
-import { Grid, Link, Pagination } from "@mui/material";
+import { Grid, Pagination } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import {
   getPosts,
+  getPostsByTag,
   getPostsByUser,
   selectAllPosts,
   selectPostCount,
@@ -37,7 +38,9 @@ export default function PostList({ filter, value }) {
       {}
     );
     if (filter === "user") {
-      dispatch(getPostsByUser(value, { skip }));
+      dispatch(getPostsByUser({ value, skip }));
+    } else if (filter === "tag") {
+      dispatch(getPostsByTag({ value, skip }));
     } else {
       dispatch(getPosts({ query: keyword, skip }));
     }
@@ -47,7 +50,9 @@ export default function PostList({ filter, value }) {
   useEffect(() => {
     const skip = (page - 1) * getEnv("VITE_LIMIT");
     if (filter === "user") {
-      dispatch(getPostsByUser(value, { skip }));
+      dispatch(getPostsByUser({ value, skip }));
+    } else if (filter === "tag") {
+      dispatch(getPostsByTag({ value, skip }));
     } else {
       dispatch(getPosts({ query: keyword, skip }));
     }
